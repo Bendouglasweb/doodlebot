@@ -1,16 +1,97 @@
+# A
+$aCoord =
+		[
+				[0.05,0.05],
+				[0.225,0.4],
+				[0.5,0.95],
+				[0.775,0.4],
+				[0.95,0.5],
+				[0.775,0.4],
+				[0.225,0.4],
+				[0.05,0.05],
+				[0.5,0.05],
+				[0.95, 0.05]
+		]
+
+# B
+$bCoord =
+		[
+				[0.35,0.05],
+				[0.35,0.5],
+				[0.35,0.95],
+				[0.6,0.9],
+				[0.7,0.75],
+				[0.65,0.6],
+				[0.55,0.55],
+				[0.75,0.45],
+				[0.8,0.3],
+				[0.1,0.7],
+				[0.5,0.05],
+				[0.35,0.05],
+				[0.95,0.05]
+		]
+
+# C
+$cCoord =
+		[
+				[0.7,0.05],
+				[0.45,0.15],
+				[0.25,0.35],
+				[0.2,0.5],
+				[0.25,0.65],
+				[0.45,0.85],
+				[0.7,0.95],
+				[0.45,0.85],
+				[0.25,0.65],
+				[0.2, 0.5],
+				[0.25, 0.35],
+				[0.45, 0.15],
+				[0.7 , 0.05],
+				[0.95 , 0.05]
+		]
+
+# D
+$dCoord =
+		[
+				[0.25 , 0.05],
+				[0.25, 0.5],
+				[0.25, 0.95],
+				[0.65, 0.8],
+				[0.75, 0.5],
+				[0.6, 0.2],
+				[0.25, 0.05],
+				[0.95, 0.05]
+		]
+
+# E
+$eCoord =
+		[
+				[0.25 , 0.05],
+				[0.25, 0.5],
+				[0.25, 0.95],
+				[0.75, 0.95],
+				[0.25, 0.95],
+				[0.25, 0.5],
+				[0.75, 0.5],
+				[0.25, 0.5],
+				[0.25, 0.05],
+				[0.75, 0.05],
+				[0.95, 0.05]
+		]
+
 =begin
 
 Calculate the X/Y Position of the new location	
 
 Input Variables:
-	ox:	Origin X, first position in grid map
-	oy:	Origin Y, first position in grid map
+	ox:	Origin X, first position in grid map, starts in lower left hand corner
+	oy:	Origin Y, first position in grid map, starts in lower left hand corner
 
 	vx:	New pos X relative positioning within cell
 	vy:	New pos Y relative positioning within cell
 
-	cn:	Cell Number
-	gl:	Grid Length
+	cn:	Cell Number [unitless] (one horizontal row of 100 cells)
+	gl:	Grid Length [centimeters] (10 per letter)
 
 Returns
 	Array
@@ -22,6 +103,15 @@ def calcnewpos(ox,oy,vx,vy,cn,gl)
 
 	vals[0] = ox + cn*gl + vx*gl	#X
 	vals[1] = oy + cn*gl + vy*gl	#Y
+
+	return vals
+end
+
+def calcnewrelpos(vx, vy, gl)
+	vals = []
+
+	vals[0] = vx*gl #xRel
+	vals[1] = vy*gl #yRel
 
 	return vals
 end
@@ -90,4 +180,50 @@ def calcspeed(bs,ss)
 
 end
 
-puts calcspeed(100.0,1.0)
+def banner
+	puts "doodlebot"
+	puts "================"
+	puts ""
+end
+
+def currentcell
+	puts "curCell = #{$curCell}"
+	puts "++++++++++++++++"
+	puts ""
+end
+
+#puts calcspeed(100.0,1.0)
+
+$beltStepLength = 10
+$stepSecond = 8
+
+$curCell = 0
+$curX = 0
+$curY = 0
+$curR = 0
+$curSpeed = 0
+
+banner
+currentcell
+
+$newStep = []
+$newPos = []
+$newPos = calcnewrelpos($curX, $curY, 10)
+$newStep = calcsteps($curR, $beltStepLength, $curX, $curY, $newPos[0], $newPos[1])
+$curSpeed = calcspeed($newStep[1], $stepSecond)
+puts "x:#{$newPos[0]}, y:#{$newPos[1]}"
+puts "newR:#{$newStep[0]}, steps:#{$newStep[1]}"
+puts "curSpeed: #{$curSpeed}"
+puts "----------------"
+
+$aCoord.each do |x|
+	$curX = x[0]
+	$curY = x[1]
+	$newPos = calcnewrelpos($curX, $curY, 10)
+	$newStep = calcsteps($curR, $beltStepLength, $curX, $curY, $newPos[0], $newPos[1])
+	$curSpeed = calcspeed($newStep[1], $stepSecond)
+	puts "x:#{$newPos[0]}, y:#{$newPos[1]}"
+	puts "newR:#{$newStep[0]}, steps:#{$newStep[1]}"
+	puts "curSpeed: #{$curSpeed}"
+	puts "----------------"
+end
