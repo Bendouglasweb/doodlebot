@@ -3,15 +3,15 @@ include PiPiper
 
 # Motor one outputs
 
-$pm1_1a = PiPiper::Pin.new(:pin => 5, :direction => :out)  # Coil 1A - Grey Wire
-$pm1_1b = PiPiper::Pin.new(:pin => 6, :direction => :out)  # Coil 1B - Green Wire
-$pm1_2a = PiPiper::Pin.new(:pin => 13, :direction => :out) # Coil 2A - Yellow Wire
-$pm1_2b = PiPiper::Pin.new(:pin => 19, :direction => :out) # Coil 2B - Red Wire
+$pm1_1a = PiPiper::Pin.new(:pin => 5, :direction => :out)  # Coil 1A - Grey Wire	Blue
+$pm1_1b = PiPiper::Pin.new(:pin => 6, :direction => :out)  # Coil 1B - Green Wire	Blue-stripe
+$pm1_2a = PiPiper::Pin.new(:pin => 13, :direction => :out) # Coil 2A - Yellow Wire	Orange-stripe
+$pm1_2b = PiPiper::Pin.new(:pin => 19, :direction => :out) # Coil 2B - Red Wire		Orangle
 
 # Motor two outputs
 
 $pm2_1a = PiPiper::Pin.new(:pin => 12, :direction => :out)  # Coil 1A - Grey Wire
-$pm2_1b = PiPiper::Pin.new(:pin => 16, :direction => :out)  # Coil 1B - Green Wire
+$pm2_1b = PiPiper::Pin.new(:pin => 16, :direction => :out)  # Coil 1B - Green Wire	
 $pm2_2a = PiPiper::Pin.new(:pin => 20, :direction => :out) # Coil 2A - Yellow Wire
 $pm2_2b = PiPiper::Pin.new(:pin => 21, :direction => :out) # Coil 2B - Red Wire
 
@@ -129,16 +129,19 @@ end
 #	0 -> left motor
 #	1 -> right motor
 def driveMotor(m,delay,turns)
-
+	puts "m: #{m} delay: #{delay} turns: #{turns}"
+	turns = turns.floor
 	if m == 0
 		if delay > 0
+			
 			turns.times do 
-				turn 0 1	# turn the left motor forward		( extend belt )
+				turn(0,0)	# turn the left motor forward		( extend belt )
 				sleep delay
 			end
 		else
+			delay = delay * -1
 			turns.times do 
-				turn 0 0	# turn the left motor backwards		( retract belt )
+				turn(0,1)	# turn the left motor backwards		( retract belt )
 				sleep delay
 			end
 		end	
@@ -146,12 +149,13 @@ def driveMotor(m,delay,turns)
 	else
 		if delay > 0
 			turns.times do 
-				turn 1 0	# turn the right motor backwards	( extend belt )
+				turn(1,0)	# turn the right motor backwards	( extend belt )
 				sleep delay
 			end
 		else
+			delay = delay * -1
 			turns.times do 
-				turn 1 1	# turn the right motor forwards		( retract belt )
+				turn(1,1)	# turn the right motor forwards		( retract belt )
 				sleep delay
 			end
 		end	

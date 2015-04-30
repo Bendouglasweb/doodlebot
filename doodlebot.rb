@@ -1,3 +1,7 @@
+#require 'driver.rb'
+require './path.rb'
+#include './path.rb'
+
 
 =begin
 
@@ -54,8 +58,8 @@ done with sentence
 =end
 def doodlebot
     # constants
-    ox = 20
-    oy = 20
+    ox = 50
+    oy = 50
     
     mxLeft = 0
     mxRight = 100
@@ -66,16 +70,16 @@ def doodlebot
     rightMotor = 1
     
     beltStepLength = 0.1
-    stepSecond = 1
-    gl = 10
+    stepSecond = 4
+    gl = 95
     
     # dynamic variables
     curCell = 0
     
-    leftR = 82.46211251
-    rightR = 113.137085
+    leftR = 70.710167812
+    rightR = 70.710167813
     
-    $A.each do |coord|
+    $bCoord.each do |coord|
   
         leftVals = motorMove(ox, oy, coord, gl, leftR, beltStepLength, mxLeft, myLeft, stepSecond, curCell)
         rightVals = motorMove(ox, oy, coord, gl, rightR, beltStepLength, mxRight, myRight, stepSecond, curCell)
@@ -83,17 +87,19 @@ def doodlebot
         leftR = leftVals[0]
         rightR = rightVals[0]
         
-        puts "Left: #{leftVals[0]} || #{leftVals[1]} || #{leftVals[2]}"
-        puts "Right: #{rightVals[0]} || #{rightVals[1]} || #{rightVals[2]}"
+        #puts "Left: #{leftVals[0]} || #{leftVals[1]} || #{leftVals[2]}"
+        #puts "Right: #{rightVals[0]} || #{rightVals[1]} || #{rightVals[2]}"
         
-        #leftMotorThread=Thread.new{driveMotor(leftMotor, leftVals[1], leftVals[2])}
-        #rightMotorThread=Thread.new{driveMotor(rightMotor, rightVals[1], leftVals[2])}
+        leftMotorThread=Thread.new{driveMotor(leftMotor, leftVals[1], leftVals[2])}
+        rightMotorThread=Thread.new{driveMotor(rightMotor, rightVals[1], leftVals[2])}
         
-        #leftMotorThread.join
-        #rightMotorThread.join
+        leftMotorThread.join
+        rightMotorThread.join
         
     end
     
 end
 
 doodlebot()
+
+#release
